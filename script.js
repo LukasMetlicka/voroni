@@ -27,26 +27,33 @@ $(document).ready(function($) {
 });
 
 var generateVoroni = function(x, y, c){
-	var nearest = [canvas.width,canvas.height];
-	var color = "#FF0FFF";
+	var closest = {
+		x: NaN,
+		y: NaN,
+		distance: Math.hypot(canvas.width, canvas.height),
+		color: NaN
+	}
 	for(i = 0; i < canvas.height; i++){
 		for(j = 0; j < canvas.width; j++){
 			for (k = 0; k < x.length; k++){
 				var a = Math.hypot(x[k] - j, y[k] - i);
-				var b = Math.hypot(nearest[0] - j, nearest[1] - i)
-				if ( a < b ){
-					log += ("A: " + a + "\t B: " + b + "\n");
-					nearest = [x[k],y[k]];
-					color = c[k];
+				if ( a < closest.distance ){
+					closest.x = x[k];
+					closest.y = y[k];
+					closest.distance = a;
+					closest.color = c[k];
 				}
 				
 			}
-			paintPoint(j, i, color);
-			nearest = [canvas.width,canvas.height];
-			color = NaN;
+			paintPoint(j, i, closest.color);
+			var closest = {
+				x: NaN,
+				y: NaN,
+				distance: Math.hypot(canvas.width, canvas.height),
+				color: NaN
+			}
 		}
 	}
-	console.log(log);
 }
 
 function generateVerticies( x, y ){
