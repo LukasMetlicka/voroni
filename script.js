@@ -24,7 +24,38 @@ $(document).ready(function($) {
 		reloadCanvas();
 	});
 
-	
+	$("#insertPoint_button").click(function(event) {
+		if (!isNaN($("#insertPoint_x").val()) && !isNaN($("#insertPoint_y").val())){
+			vX.push($("#insertPoint_x").val());
+			vY.push($("#insertPoint_y").val());
+			color.push(generateRandomColor());
+			reloadCanvas();
+			$("#insertPoint_x").val("");
+			$("#insertPoint_y").val("");
+		} else {
+			alert("that isn't a number!");
+			$("#insertPoint_x").val("");
+			$("#insertPoint_y").val("");
+		}
+	});
+
+	$(document).keypress(function(event) {
+		if (event.keyCode == 13){
+			if (!isNaN($("#insertPoint_x").val()) && !isNaN($("#insertPoint_y").val())){
+			vX.push($("#insertPoint_x").val());
+			vY.push($("#insertPoint_y").val());
+			color.push(generateRandomColor());
+			reloadCanvas();
+			$("#insertPoint_x").val("");
+			$("#insertPoint_y").val("");
+		} else {
+			alert("that isn't a number!");
+			$("#insertPoint_x").val("");
+			$("#insertPoint_y").val("");
+		}
+		}
+	});
+
 });
 
 var generateVoroni = function(x, y, c){

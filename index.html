@@ -8,9 +8,24 @@
 		<div id="wrapper">
 			<canvas id="voroni"></canvas>
 		</div>
-		<div id="think">
-			<h1>Thinking...</h1>
+		<div id="menu" class="title">
+			<div id="opacity" class="menuItem">
+				<h2 class="subTitle">Opacity:</h2>
+				<input type="range" id="opacity_slider"></input>
+			</div>
+			<div id="insertPoint" class="menuItem">
+				<h2 class="subTitle">Insert a Point:</h2>
+				<h3>X: </h3><input id="insertPoint_x"></input><br>
+				<h3>Y:</h3><input id="insertPoint_y"></input><br>
+				<input id="insertPoint_button" type="button"></input>
+			</div>
+			<div id="imageUpload" class="menuItem">
+				<h2 class="subTitle">Upload an Image:</h2>
+				<input type="file"></input>
+			</div>
+			
 		</div>
+		
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 		<script type="text/javascript" src="script.js"></script>
