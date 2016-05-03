@@ -21,9 +21,10 @@ $(document).ready(function($) {
 		vX.push(event.pageX - $(this).offset().left);
 		vY.push(event.pageY - $(this).offset().top);
 		color.push(generateRandomColor());
-		generateVoroni(vX, vY, color);
-		generateVerticies(vX, vY);
+		reloadCanvas();
 	});
+
+	
 });
 
 var generateVoroni = function(x, y, c){
@@ -54,6 +55,11 @@ var generateVoroni = function(x, y, c){
 			}
 		}
 	}
+}
+
+function reloadCanvas(){
+	generateVoroni(vX, vY, color);
+	generateVerticies(vX, vY);
 }
 
 function generateVerticies( x, y ){
