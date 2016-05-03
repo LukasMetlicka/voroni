@@ -11,34 +11,19 @@ img.onload = function() {
 var vX = [];
 var vY = [];
 var color = [];
+var log = ""
 
 
 $(document).ready(function($) {
 	$("#think").hide('fast');
 	
 	$("#voroni").click(function(event) {
-		$("#think").show('fast');
 		vX.push(event.pageX - $(this).offset().left);
 		vY.push(event.pageY - $(this).offset().top);
 		color.push(generateRandomColor());
 		generateVoroni(vX, vY, color);
 		generateVerticies(vX, vY);
-		$("#think").hide('fast');
 	});
-	/*for (i = 0; i < 100; i++){
-		vX.push(randomVert(0));
-	}
-	for (i = 0; i < vX.length; i++){
-		vY.push(randomVert(1));
-	}
-	for (i = 0; i < vX.length; i++){
-		color.push(generateRandomColor());
-	}
-	generateVoroni(vX, vY, color);
-	CHANGES
-	*/
-
-
 });
 
 var generateVoroni = function(x, y, c){
@@ -47,9 +32,10 @@ var generateVoroni = function(x, y, c){
 	for(i = 0; i < canvas.height; i++){
 		for(j = 0; j < canvas.width; j++){
 			for (k = 0; k < x.length; k++){
-				var a = Math.hypot(j - x[k], i - y[k]);
-				var b = Math.hypot(j - nearest[0], i - nearest[1])
+				var a = Math.hypot(x[k] - j, y[k] - i);
+				var b = Math.hypot(nearest[0] - j, nearest[1] - i)
 				if ( a < b ){
+					log += ("A: " + a + "\t B: " + b + "\n");
 					nearest = [x[k],y[k]];
 					color = c[k];
 				}
@@ -60,6 +46,7 @@ var generateVoroni = function(x, y, c){
 			color = NaN;
 		}
 	}
+	console.log(log);
 }
 
 function generateVerticies( x, y ){
@@ -107,6 +94,14 @@ function randomVert(i){
 		return Math.floor(Math.random() * canvas.width - 0 + 1);
 	} else {
 		return Math.floor(Math.random() * canvas.height - 0 + 1);
+	}
+}
+
+function makeRandomPoints(num){
+	for (i = 0; i < num; i++){
+		vX.push(randomVert(0));
+		vY.push(randomVert(1));
+		color.push(generateRandomColor());
 	}
 }
 
