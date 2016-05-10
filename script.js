@@ -20,9 +20,8 @@ $(document).ready(function($) {
 		sites.push({x: randomVert(-1), y: randomVert(1)});
 	}
 	var diagram = voronoi.compute(sites, bbox);
-	console.log(diagram.edges)
-	for(i = 0; i < diagram.vertices.length; i++){
-		paintDot(diagram.vertices[i].x, diagram.vertices[i].y, "#000000");
+		for(i = 0; i < sites.length; i++){
+		paintDot(sites[i].x, sites[i].y, "#000000");
 	}
 	for (i = 0; i < diagram.edges.length; i++){
 		var va = diagram.edges[i].va;
