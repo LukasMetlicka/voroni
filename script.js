@@ -12,16 +12,15 @@ var vX = [];
 var vY = [];
 var color = [];
 var log = ""
-
+var wireNum = 0;
 
 $(document).ready(function($) {
-	$("#think").hide('fast');
 	
 	$("#voroni").click(function(event) {
 		vX.push(event.pageX - $(this).offset().left);
 		vY.push(event.pageY - $(this).offset().top);
 		color.push(generateRandomColor());
-		reloadCanvas();
+		reloadCanvas(wireNum);
 	});
 
 	$("#insertPoint_button").click(function(event) {
@@ -29,7 +28,7 @@ $(document).ready(function($) {
 			vX.push($("#insertPoint_x").val());
 			vY.push($("#insertPoint_y").val());
 			color.push(generateRandomColor());
-			reloadCanvas();
+			reloadCanvas(wireNum);
 			$("#insertPoint_x").val("");
 			$("#insertPoint_y").val("");
 		} else {
@@ -45,7 +44,7 @@ $(document).ready(function($) {
 			vX.push($("#insertPoint_x").val());
 			vY.push($("#insertPoint_y").val());
 			color.push(generateRandomColor());
-			reloadCanvas();
+			reloadCanvas(wireNum);
 			$("#insertPoint_x").val("");
 			$("#insertPoint_y").val("");
 		} else {
@@ -54,6 +53,32 @@ $(document).ready(function($) {
 			$("#insertPoint_y").val("");
 		}
 		}
+	});
+
+	/*$("#file").change(function(event) {
+		var val = URL.createObjectURL(event.target.files[0]);
+
+    	switch(val.substring(val.lastIndexOf('.') + 1).toLowerCase()){
+        	case 'gif': case 'jpg': case 'png':
+        		var image = new Image();
+        		image.src = val;
+        		image.onload = function (){
+        			ctx.drawImage(image, 100, 100);
+        		}
+            	
+            	break;
+        default:
+            $(this).val('');
+            alert("this file doesn't work! try another");
+            break;
+    }
+	});*/
+	$('#file').change( function(event) {
+    	var image = new Image();
+    	image.src = URL.createObjectURL(event.target.files[0]);
+    	image.onload = function(){
+    		ctx.drawImage(image, 0, 0);
+    	}
 	});
 
 });
@@ -88,9 +113,46 @@ var generateVoroni = function(x, y, c){
 	}
 }
 
-function reloadCanvas(){
-	generateVoroni(vX, vY, color);
-	generateVerticies(vX, vY);
+function generateWireframe(x, y, c){
+	var closest = {
+		x: NaN,
+		y: NaN,
+		distance: Math.hypot(canvas.width, canvas.height),
+		color: NaN
+	}
+	for (i = 0; i < canvas.height; i++){
+		for (j = 0; j < canvas.width; j++){
+			for (k = 0; k < x.length; k++){
+				var a = Math.hypot(x[k] - j, y[k] - i);
+				if (a == closest.distance){
+					paintPoint(j, i, "#FFFFFF");
+				} else if (a < closest.distance){
+					closest.x = x[k];
+					closest.y = y[k];
+					closest.distance = a;
+					closest.color = c[k];
+				}
+			}
+			var closest = {
+				x: NaN,
+				y: NaN,
+				distance: Math.hypot(canvas.width, canvas.height),
+				color: NaN
+			}
+		}
+	}
+}
+
+function reloadCanvas(a){
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	if (a < 1){
+		generateVoroni(vX, vY, color);
+		generateVerticies(vX, vY);
+	} else {
+		generateWireframe(vX, vY, "#FFFFFF");
+		generateVerticies(vX, vY);
+	}
+	
 }
 
 function generateVerticies( x, y ){

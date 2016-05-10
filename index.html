@@ -7,6 +7,7 @@
 		
 		<div id="wrapper">
 			<canvas id="voroni"></canvas>
+			<img display="none"></div>
 		</div>
 		<div id="menu" class="title">
 			<div id="opacity" class="menuItem">
@@ -17,11 +18,12 @@
 				<h2 class="subTitle">Insert a Point:</h2>
 				<h3>X: </h3><input id="insertPoint_x"></input><br>
 				<h3>Y:</h3><input id="insertPoint_y"></input><br>
-				<input id="insertPoint_button" type="button"></input>
+				<input id="insertPoint_button" type="button" class="button" value="Add"></input>
 			</div>
 			<div id="imageUpload" class="menuItem">
 				<h2 class="subTitle">Upload an Image:</h2>
-				<input type="file"></input>
+				<input type="file" class="file" id="file"></input>
+				<input type="button" id="file_submit" value="upload"></input>
 			</div>
 			
 		</div>
