@@ -1,22 +1,38 @@
-var canvas = document.getElementById("voroni");
-var ctx = canvas.getContext("2d");
-canvas.width = 500;
-canvas.height = 500;
-/*var img = new Image();
-img.src = 'https://mdn.mozillademos.org/files/5397/rhino.jpg';
-img.onload = function() {
-	ctx.drawImage(img, 50, 50);
-}*/
-
-var vX = [];
-var vY = [];
-var color = [];
-var log = ""
-var wireNum = 0;
+var canvas = document.getElementById("voronoi");
+	var ctx = canvas.getContext("2d");
+	canvas.width = 500;
+	canvas.height = 500;
+	var vX = [];
+	var vY = [];
+	var color = [];
+	var log = ""
+	var wireNum = 0;
 
 $(document).ready(function($) {
+
 	
-	$("#voroni").click(function(event) {
+	
+	var voronoi = new Voronoi();
+	var bbox = {xl: 0, xr: 500, yt: 0, yb: 500};
+	var sites = [];
+	//test sites
+	for( i = 0; i < 20; i++){
+		sites.push({x: randomVert(-1), y: randomVert(1)});
+	}
+	var diagram = voronoi.compute(sites, bbox);
+	console.log(diagram.edges)
+	for(i = 0; i < diagram.vertices.length; i++){
+		paintDot(diagram.vertices[i].x, diagram.vertices[i].y, "#000000");
+	}
+	for (i = 0; i < diagram.edges.length; i++){
+		var va = diagram.edges[i].va;
+		var vb = diagram.edges[i].vb;
+		drawLine(va.x, va.y, vb.x, vb.y);
+	}
+	
+	/* 		LISTENERS 		*/
+
+	$("#voronoi").click(function(event) {
 		vX.push(event.pageX - $(this).offset().left);
 		vY.push(event.pageY - $(this).offset().top);
 		color.push(generateRandomColor());
@@ -55,24 +71,6 @@ $(document).ready(function($) {
 		}
 	});
 
-	/*$("#file").change(function(event) {
-		var val = URL.createObjectURL(event.target.files[0]);
-
-    	switch(val.substring(val.lastIndexOf('.') + 1).toLowerCase()){
-        	case 'gif': case 'jpg': case 'png':
-        		var image = new Image();
-        		image.src = val;
-        		image.onload = function (){
-        			ctx.drawImage(image, 100, 100);
-        		}
-            	
-            	break;
-        default:
-            $(this).val('');
-            alert("this file doesn't work! try another");
-            break;
-    }
-	});*/
 	$('#file').change( function(event) {
     	var image = new Image();
     	image.src = URL.createObjectURL(event.target.files[0]);
@@ -83,7 +81,7 @@ $(document).ready(function($) {
 
 });
 
-var generateVoroni = function(x, y, c){
+function generatevoronoi(x, y, c){
 	var closest = {
 		x: NaN,
 		y: NaN,
@@ -146,7 +144,7 @@ function generateWireframe(x, y, c){
 function reloadCanvas(a){
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	if (a < 1){
-		generateVoroni(vX, vY, color);
+		generatevoronoi(vX, vY, color);
 		generateVerticies(vX, vY);
 	} else {
 		generateWireframe(vX, vY, "#FFFFFF");
@@ -211,3 +209,9 @@ function makeRandomPoints(num){
 	}
 }
 
+function drawLine(xa, ya, xb, yb){
+	ctx.beginPath();
+	ctx.moveTo(xa, ya);
+	ctx.lineTo(xb, yb);
+	ctx.stroke();
+}
