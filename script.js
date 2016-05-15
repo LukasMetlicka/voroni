@@ -50,7 +50,7 @@ $(document).ready(function($) {
 			
 		});
 	
-
+	// Correctly gets mouse position
 	canvas.addEventListener("mousemove", function(evt){
 		var rect = canvas.getBoundingClientRect();
 		posX = (evt.pageX - rect.left) * (canvas.width / $("#voronoi").width()) ;
@@ -65,7 +65,7 @@ $(document).ready(function($) {
 			reloadCanvas();
 		}
 	});
-});
+
 	// Clear Button
 	$("#clear").click(function(event) {
 		sites = [];
@@ -116,7 +116,7 @@ $(document).ready(function($) {
     		reloadCanvas();
     	}
 	});
-
+});
 
 //redraws the canvas
 function reloadCanvas(){
@@ -147,9 +147,17 @@ function paintPoint(x, y, c){
 //places a point on canvas
 function paintDot(x, y){
 	ctx.beginPath();
-    ctx.arc(x, y, 5, 0, 2 * Math.PI, false);
+    ctx.arc(x, y, (canvas.width / 250), 0, 2 * Math.PI, false);
     ctx.fillStyle = '#000000';
     ctx.fill();
+}
+// draws a line on canvas
+function drawLine(xa, ya, xb, yb){
+	ctx.lineWidth = canvas.width / 500;
+	ctx.beginPath();
+	ctx.moveTo(xa, ya);
+	ctx.lineTo(xb, yb);
+	ctx.stroke();
 }
 
 // Changes rgb to Hex color id
@@ -172,10 +180,4 @@ function randomVert(i){
 		return Math.floor(Math.random() * canvas.height - 0 + 1);
 	}
 }
-// draws a line on canvas
-function drawLine(xa, ya, xb, yb){
-	ctx.beginPath();
-	ctx.moveTo(xa, ya);
-	ctx.lineTo(xb, yb);
-	ctx.stroke();
-}
+
