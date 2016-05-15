@@ -27,6 +27,12 @@ input.file {
  	border:none;
   	width: 100%;
 }
+#clear {
+	background-color: #e74c3c;
+ 	border:none;
+  	width: 70%;
+  	margin-bottom: 10;
+}
 .subTitle {
 	text-decoration: none;
 	font-family: sans-serif;
