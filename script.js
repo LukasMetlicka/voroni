@@ -12,59 +12,73 @@ var diagram = voronoi.compute(sites, bbox);
 
 var posX;
 var posY;
-var didDrag = false;
+var downX;
+var downY;
 
 $(document).ready(function($) {
 
-	/* 		LISTENERS 		*/
-	/*$("#voronoi").mousemove(function(event) {
-		posX = event.pageX - $(this).offset().left;
-		posY = event.pageY - $(this).offset().top;
-		console.log(posX + "," + posY);
-	});*/
+	// 			LISTENERS 
 
-	$("#voronoi").mousedown(function(event) {
-		
-		for(i = 0; i < sites.length; i++){
-			var xMin = sites[i].x - 10;
-			var xMax = sites[i].x + 10;
-			var yMin = sites[i].y - 10;
-			var yMax = sites[i].y + 10;
-			if(posX > xMin && posX < xMax && posY > yMin && posY < yMax){
-				console.log(posX + " " + sites[i].x + "\t" + posY + " " + sites[i].y);
-				if(posX - sites[i].x >= 0){
-					sites[i].x += posX;
-				} else {
-					sites[i].x -= posX;
-				}
-				if(posY - sites[i].y >= 0){
-					sites[i].y += posY;
-				} else {
-					sites[i].y -= posY;
-				}
-				didDrag = true;
-				} else {
-				didDrag = false;
-			}
-		}
-			
-		});
-	
 	// Correctly gets mouse position
 	canvas.addEventListener("mousemove", function(evt){
 		var rect = canvas.getBoundingClientRect();
 		posX = (evt.pageX - rect.left) * (canvas.width / $("#voronoi").width()) ;
 		posY = (evt.pageY - rect.top) * (canvas.height / $("#voronoi").height());
-		console.log(posX + "," + posY);
 	});
 
+	$("#voronoi").mousedown(function(event) {
+		downX = posX;
+		downY = posY;
+		
+		for(i = 0; i < sites.length; i++){
+			if(Math.hypot((sites[i].x - posX), (sites[i].y - posY)) < 100){
+				var j = i;
+				var shouldRun = true;
+				
+					$("#voronoi").mousemove(function(event) {
+						if(shouldRun){
+							var msg = "";
+							if(posX > sites[j].x){
+								sites[j].x += (posX - sites[j].x);
+								msg += '(+,';
+							} else if(posX < sites[j].x) {
+								sites[j].x -= (sites[j].x - posX);
+								msg += '(-,';
+							}
+							
+							if(posY > sites[j].y){
+								sites[j].y += (posY - sites[j].y);
+								msg += "+)";
+							} else if (posY < sites[j].y) {
+								sites[j].y -= (sites[j].y - posY);
+								msg += '-)';
+							}
+							
+							reloadCanvas();
+
+							console.log(msg)
+
+							$("#voronoi").mouseup(function(event) {
+								shouldRun = false;
+							})
+						}	
+					});
+				
+				
+				
+			}
+		}
+			
+		});
+	
 	$("#voronoi").mouseup(function(event) {
-		if( !didDrag ){
+		if( posX == downX && posY == downY ){
 			addVertex(posX, posY);
-			console.log(posX + " " + sites[sites.length - 1].x + "\t" + posY + " " + sites[sites.length - 1].y)
 			reloadCanvas();
 		}
 	});
+
+	// 			BUTTONS
 
 	// Clear Button
 	$("#clear").click(function(event) {
